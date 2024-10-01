@@ -1,36 +1,36 @@
-let timer;
-let isRunning = false;
-let time = 0;
+let timeRemaining = 10 * 60 * 60; // 10 hours in seconds
 
-function startTimer() {
-    if (!isRunning) {
-        isRunning = true;
-        timer = setInterval(() => {
-            time++;
-            document.getElementById("timer").innerHTML = formatTime(time);
-        }, 1000);
-    }
+// Function to start the countdown
+function startCountdown() {
+    const timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            document.getElementById("timer").innerHTML = formatTime(timeRemaining);
+        } else {
+            clearInterval(timerInterval);
+            showGhost();
+        }
+    }, 1000);
 }
 
-function pauseTimer() {
-    isRunning = false;
-    clearInterval(timer);
-}
-
-function resetTimer() {
-    isRunning = false;
-    clearInterval(timer);
-    time = 0;
-    document.getElementById("timer").innerHTML = "00:00:00";
-}
-
+// Function to format time as XX HOURS YY MINUTES ZZ SECONDS
 function formatTime(seconds) {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+    return `${pad(hours)} HOURS ${pad(minutes)} MINUTES ${pad(secs)} SECONDS`;
 }
 
+// Function to pad numbers to two digits
 function pad(number) {
     return number < 10 ? `0${number}` : number;
 }
+
+// Function to show ghost image when timer reaches 0
+function showGhost() {
+    document.getElementById("timer").style.display = "none";  // Hide the timer
+    document.getElementById("ghost").style.display = "block"; // Show the ghost image
+}
+
+// Start the countdown immediately when the page loads
+startCountdown();
