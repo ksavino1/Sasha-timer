@@ -1,39 +1,38 @@
-let countdownTime = 10 * 60 * 60; // 10 hours in seconds
+const countdownTime = 10 * 60 * 60; // 10 hours in seconds
 let timerInterval;
-let timeRemaining;
+let endTime;
 
-// Function to start the countdown
+// Function to start or continue the countdown
 function startCountdown() {
-    const savedTime = localStorage.getItem('timeRemaining');
-    const savedTimestamp = localStorage.getItem('timestamp');
-
-    if (savedTime && savedTimestamp) {
-        // Calculate the difference between now and when the time was saved
-        const elapsedTime = Math.floor((Date.now() - savedTimestamp) / 1000);
-        timeRemaining = Math.max(0, savedTime - elapsedTime);
+    // Check if there's an end time saved in localStorage
+    const savedEndTime = localStorage.getItem('endTime');
+    
+    if (savedEndTime) {
+        // Parse the saved end time
+        endTime = new Date(parseInt(savedEndTime, 10));
     } else {
-        timeRemaining = countdownTime;
+        // If no end time is saved, set a new one 10 hours from now
+        endTime = new Date(Date.now() + countdownTime * 1000);
+        localStorage.setItem('endTime', endTime.getTime());
     }
 
-    // If timer has reached zero, show ghost immediately
-    if (timeRemaining === 0) {
+    // Start or resume the countdown
+    updateTimer(); // Update the timer immediately on load
+    timerInterval = setInterval(updateTimer, 1000); // Update every second
+}
+
+// Function to update the timer display
+function updateTimer() {
+    const currentTime = new Date();
+    const timeRemaining = Math.max(0, Math.floor((endTime - currentTime) / 1000));
+
+    if (timeRemaining > 0) {
+        document.getElementById("timer").innerHTML = formatTime(timeRemaining);
+    } else {
+        clearInterval(timerInterval);
         showGhost();
-        return;
+        localStorage.removeItem('endTime'); // Clear the saved end time when countdown is done
     }
-
-    // Start the countdown
-    timerInterval = setInterval(() => {
-        if (timeRemaining > 0) {
-            timeRemaining--;
-            document.getElementById("timer").innerHTML = formatTime(timeRemaining);
-            // Save the remaining time and the current timestamp in localStorage
-            localStorage.setItem('timeRemaining', timeRemaining);
-            localStorage.setItem('timestamp', Date.now());
-        } else {
-            clearInterval(timerInterval);
-            showGhost();
-        }
-    }, 1000);
 }
 
 // Function to format time as XX HOURS YY MINUTES ZZ SECONDS
@@ -44,7 +43,7 @@ function formatTime(seconds) {
     return `${pad(hours)} HOURS ${pad(minutes)} MINUTES ${pad(secs)} SECONDS`;
 }
 
-// Function to pad numbers to two digits
+// Function to pad numbers to two digits (e.g., 09 instead of 9)
 function pad(number) {
     return number < 10 ? `0${number}` : number;
 }
@@ -53,9 +52,6 @@ function pad(number) {
 function showGhost() {
     document.getElementById("timer").style.display = "none";  // Hide the timer
     document.getElementById("ghost").style.display = "block"; // Show the ghost image
-    // Clear localStorage since the countdown is finished
-    localStorage.removeItem('timeRemaining');
-    localStorage.removeItem('timestamp');
 }
 
 // Start the countdown immediately when the page loads
