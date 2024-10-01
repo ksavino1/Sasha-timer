@@ -14,13 +14,15 @@ body {
 }
 
 #timer {
-    font-size: 48px;
+    font-size: 36px;
     margin: 20px 0;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
+#ghost {
+    margin-top: 20px;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
 }
