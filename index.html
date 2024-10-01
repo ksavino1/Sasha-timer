@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timer Example</title>
+    <title>Global Countdown Timer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Simple Timer</h1>
-        <div id="timer">00:00:00</div>
-        <button onclick="startTimer()">Start</button>
-        <button onclick="pauseTimer()">Pause</button>
-        <button onclick="resetTimer()">Reset</button>
+        <!-- Timer display -->
+        <div id="timer">10 HOURS 00 MINUTES 00 SECONDS</div>
+        
+        <!-- Placeholder for ghost image -->
+        <div id="ghost" style="display: none;">
+            <img src="ghost.png" alt="Ghost Image" style="width: 200px;">
+        </div>
     </div>
 
     <script src="script.js"></script>
